@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "99906503843",
+    "firebase_url": "https://visiteurope-8fccf-default-rtdb.firebaseio.com",
+    "project_id": "visiteurope-8fccf",
+    "storage_bucket": "visiteurope-8fccf.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:99906503843:android:6d15a523e820abc390eb16",
+        "android_client_info": {
+          "package_name": "com.example.visiteurope"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "99906503843-6e6slf743l8qmhdhhvss6bom88gdl851.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDqT_o6e0ywb9dlnpXLUFTh8rFF-pfgiXI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "99906503843-6e6slf743l8qmhdhhvss6bom88gdl851.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
