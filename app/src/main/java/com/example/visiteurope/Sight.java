@@ -77,7 +77,7 @@ public class Sight extends AppCompatActivity {
 
                     @Override
                     public void onCancelled(@NonNull DatabaseError databaseError) {
-                        Toast.makeText(Sight.this, "Error Loading Image", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(Sight.this, "Error loading Image", Toast.LENGTH_SHORT).show();
                     }
                 });
 

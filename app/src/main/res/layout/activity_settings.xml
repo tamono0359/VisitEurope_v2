@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    style="@style/AppTheme"
     tools:context=".Settings" >
 
     <ImageView
@@ -15,7 +16,7 @@
         android:clickable="true"
         android:src="@drawable/arrow_left_icon" />
 
-    <Switch
+    <androidx.appcompat.widget.SwitchCompat
         android:id="@+id/mode_switch"
         android:layout_width="400dp"
         android:layout_height="wrap_content"
