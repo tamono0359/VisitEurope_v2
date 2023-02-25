@@ -97,7 +97,6 @@ public class HomeActivity extends AppCompatActivity {
         ImageView user_icon = (ImageView) findViewById(R.id.user_icon);
         ImageView user = (ImageView) findViewById(R.id.user);
         Button ok = (Button) findViewById(R.id.ok);
-        ImageView settings_icon = (ImageView) findViewById(R.id.settings_icon);
 
 
         ok.setOnClickListener(view -> {
@@ -221,13 +220,6 @@ public class HomeActivity extends AppCompatActivity {
                 AlertDialog dialog = builder.create();
                 dialog.show();
             }
-        });
-
-
-
-        settings_icon.setOnClickListener(view -> {
-            Intent intent = new Intent(HomeActivity.this, Settings.class);
-            startActivity(intent);
         });
     }
 }

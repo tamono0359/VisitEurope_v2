@@ -63,12 +63,6 @@ public class PlacesListActivity extends AppCompatActivity  {
     private boolean ischecked;
     NetworkChangeListener networkChangeListener = new NetworkChangeListener();
 
-    private static final int REQUEST_CODE_STORAGE_PERMISSION = 1;
-    private static final int REQUEST_CODE_SELECT_IMAGE = 2;
-    private String filePath;
-    Uri selectedImageUri;
-
-
     @Override
     protected void onStart() {
         IntentFilter filter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
@@ -169,7 +163,7 @@ public class PlacesListActivity extends AppCompatActivity  {
                     place_history.setHint("History");
                     layout.addView(place_history);
 
-                    final ImageView clip = new ImageView(PlacesListActivity.this);
+                    /*final ImageView clip = new ImageView(PlacesListActivity.this);
                     clip.setImageResource(R.drawable.clip);
                     //clip.setMinimumWidth(30);
                     //clip.setMinimumHeight(30);
@@ -185,10 +179,10 @@ public class PlacesListActivity extends AppCompatActivity  {
                                         new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
                                         REQUEST_CODE_STORAGE_PERMISSION);
                             }else{
-                                selectImage();
+                                //selectImage();
                             }
                         }
-                    });
+                    });*/
 
                     builder.setView(layout);
 
@@ -203,6 +197,7 @@ public class PlacesListActivity extends AppCompatActivity  {
                             if (title.isEmpty() && location.isEmpty() && information.isEmpty() && history.isEmpty()){
                                 Toast.makeText(PlacesListActivity.this, "You need to fill informations.", Toast.LENGTH_LONG).show();
                             }else{
+
                                 DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
                                 reference.child(path).child(title).child("location").setValue(location);
 
@@ -228,7 +223,7 @@ public class PlacesListActivity extends AppCompatActivity  {
         });
     }
 
-    private void selectImage() {
+    /*private void selectImage() {
 
         Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         if (intent.resolveActivity(getPackageManager()) != null){
@@ -267,14 +262,14 @@ public class PlacesListActivity extends AppCompatActivity  {
                         selectedImageFile = new File(getPathFromUri(selectedImageUri));
 
 
-                        /*// Create a Cloud Storage reference from the app
+                         Create a Cloud Storage reference from the app
                         FirebaseStorage storage = FirebaseStorage.getInstance("gs://visiteurope-8fccf.appspot.com");
                         StorageReference storageRef = storage.getReference();
 
                         // Create a reference to "mountains.jpg"
                         StorageReference mountainsRef = storageRef.child("skuska");
 
-                        storageRef.child("skuska").putFile(Uri.fromFile(selectedImageFile));*/
+                        storageRef.child("skuska").putFile(Uri.fromFile(selectedImageFile));
 
                     }catch (Exception exception){
                         Toast.makeText(this, exception.getMessage(), Toast.LENGTH_SHORT).show();
@@ -297,5 +292,5 @@ public class PlacesListActivity extends AppCompatActivity  {
             cursor.close();
         }
         return filePath;
-    }
+    }*/
 }

@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    style="@style/AppTheme"
+    android:background="#2A2D2F"
+    android:forceDarkAllowed="false"
     tools:context=".Sight">
 
     <ScrollView
@@ -36,7 +37,7 @@
                 android:layout_marginLeft="40dp"
                 android:layout_marginTop="30dp"
                 android:layout_marginRight="40dp"
-                android:layout_marginBottom="40dp"
+                android:layout_marginBottom="20dp"
                 app:srcCompat="@android:drawable/ic_menu_report_image" />
 
 
@@ -44,6 +45,50 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="20dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginBottom="10dp"
+                android:gravity="center_horizontal"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/uploadImage"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginRight="50dp"
+                    android:layout_marginBottom="10dp"
+                    android:background="@drawable/shape_confirm"
+                    android:paddingStart="15dp"
+                    android:paddingTop="9dp"
+                    android:paddingEnd="15dp"
+                    android:paddingBottom="5dp"
+                    android:text="Upload image"
+                    android:textColor="#FFFFFF"
+                    tools:visibility="invisible" />
+
+                <Button
+                    android:id="@+id/selectImage"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:background="@drawable/shape_confirm"
+                    android:paddingStart="15dp"
+                    android:paddingTop="9dp"
+                    android:paddingEnd="15dp"
+                    android:paddingBottom="5dp"
+                    android:text="Select image"
+                    android:textColor="#FFFFFF"
+                    tools:visibility="invisible" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="10dp"
                 android:layout_marginRight="20dp"
                 android:layout_marginBottom="10dp"
                 android:gravity="center_horizontal"
@@ -61,33 +106,32 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1">
-                </TextView>
+                    android:layout_weight="1"></TextView>
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1">
-                </TextView>
+                    android:layout_weight="1"></TextView>
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1">
-                </TextView>
+                    android:layout_weight="1"></TextView>
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1">
-                </TextView>
+                    android:layout_weight="1"></TextView>
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1">
-                </TextView>
+                    android:layout_weight="1"></TextView>
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1">
-                </TextView>
+                    android:layout_weight="1"></TextView>
 
 
                 <CheckBox
@@ -109,6 +153,7 @@
                 android:layout_marginRight="20dp"
                 android:layout_marginBottom="20dp"
                 android:text="Information:"
+                android:textColor="#FFFFFF"
                 android:textSize="18sp"
                 android:textStyle="bold" />
 
@@ -120,6 +165,7 @@
                 android:layout_marginRight="20dp"
                 android:layout_marginBottom="20dp"
                 android:hint="Information:"
+                android:textColor="#FFFFFF"
                 android:textSize="16sp" />
 
             <View
@@ -135,10 +181,11 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
                 android:layout_marginTop="20dp"
+                android:layout_marginRight="20dp"
                 android:layout_marginBottom="20dp"
                 android:text="Location/address:"
+                android:textColor="#FFFFFF"
                 android:textSize="18sp"
                 android:textStyle="bold" />
 
@@ -150,6 +197,7 @@
                 android:layout_marginRight="20dp"
                 android:layout_marginBottom="20dp"
                 android:hint="Location/address:"
+                android:textColor="#FFFFFF"
                 android:textSize="16sp" />
 
             <View
@@ -165,10 +213,11 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
                 android:layout_marginTop="20dp"
+                android:layout_marginRight="20dp"
                 android:layout_marginBottom="20dp"
                 android:text="History:"
+                android:textColor="#FFFFFF"
                 android:textSize="18sp"
                 android:textStyle="bold" />
 
@@ -180,6 +229,7 @@
                 android:layout_marginRight="20dp"
                 android:layout_marginBottom="60dp"
                 android:hint="History:"
+                android:textColor="#FFFFFF"
                 android:textSize="16sp" />
 
         </LinearLayout>
