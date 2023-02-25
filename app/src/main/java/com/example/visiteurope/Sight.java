@@ -96,6 +96,7 @@ public class Sight extends AppCompatActivity {
         storage = FirebaseStorage.getInstance();
         storageReference = storage.getReference();
 
+        //get image from database
         DatabaseReference getImage = mdatabaseReference.child(path).child("image");
         getImage.addListenerForSingleValueEvent(
                 new ValueEventListener() {
@@ -103,9 +104,10 @@ public class Sight extends AppCompatActivity {
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         String link = dataSnapshot.getValue(String.class);
 
+                        imageUpload = findViewById(R.id.uploadImage);
+                        imageSelect = findViewById(R.id.selectImage);
+
                         if (link == null){
-                            imageUpload = findViewById(R.id.uploadImage);
-                            imageSelect = findViewById(R.id.selectImage);
                             imageUpload.setVisibility(View.VISIBLE);
                             imageSelect.setVisibility(View.VISIBLE);
 
@@ -125,6 +127,8 @@ public class Sight extends AppCompatActivity {
 
                         }else {
                             Picasso.get().load(link).into(sight);
+                            imageSelect.setVisibility(View.INVISIBLE);
+                            imageUpload.setVisibility(View.INVISIBLE);
                         }
                     }
 
@@ -135,6 +139,7 @@ public class Sight extends AppCompatActivity {
                 });
 
 
+        //get informations about place from database
         mdatabaseReference = FirebaseDatabase.getInstance().getReference().child(path);
         location = findViewById(R.id.location);
         info = findViewById(R.id.info);
@@ -154,6 +159,7 @@ public class Sight extends AppCompatActivity {
         });
 
 
+        //wishlist, visibility and invisibility of icon if user is/isn't logged in
         CheckBox heart = findViewById(R.id.star);
 
         FirebaseUser fus = FirebaseAuth.getInstance().getCurrentUser();
@@ -180,8 +186,7 @@ public class Sight extends AppCompatActivity {
                 Map<String, Object> wishlist_items = new HashMap<>();
                 wishlist_items.put(wishlist_item, "");
 
-
-
+                //add place title to user's wishlist
                     mdatabaseReference = FirebaseDatabase.getInstance().getReference("Users");
                     mdatabaseReference.child(finalUserID).addValueEventListener(new ValueEventListener() {
                         @Override
@@ -199,6 +204,7 @@ public class Sight extends AppCompatActivity {
             }
         });
 
+        //informations about place - speech
         textToSpeech = new TextToSpeech(this, new TextToSpeech.OnInitListener() {
             @Override
             public void onInit(int status) {

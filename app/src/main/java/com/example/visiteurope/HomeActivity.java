@@ -140,15 +140,6 @@ public class HomeActivity extends AppCompatActivity {
             });
         }
 
-        /*user_icon.setOnClickListener(view -> {
-            if (fus != null && ischecked && wasLoggingIn) {
-                Intent intent = new Intent(HomeActivity.this, Profile.class);
-                startActivity(intent);
-            } else {
-                Intent intent = new Intent(HomeActivity.this, Login.class);
-                startActivity(intent);
-            }
-        });*/
 
         state.setOnClickListener(new View.OnClickListener() {
             @Override

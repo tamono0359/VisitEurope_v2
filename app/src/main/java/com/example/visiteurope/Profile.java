@@ -195,8 +195,9 @@ public class Profile extends AppCompatActivity {
             }
         });
 
-        final TextView[] sight = new TextView[10];
+        final TextView[] sight = new TextView[100];
 
+        //show user's wishlist
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Users");
         reference.child(userID).child("wishlist").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
             @SuppressLint("ResourceAsColor")
@@ -223,11 +224,12 @@ public class Profile extends AppCompatActivity {
                             AlertDialog.Builder builder = new AlertDialog.Builder(Profile.this);
                             builder.setTitle("Edit "+sight[finalL].getText());
 
+                            //deleting place from wishlist
                             builder.setNegativeButton("Delete", new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
                                     ll_profile.removeView(sight[finalL]);
-                                    String osem = (String) sight[finalL].getText();
+                                    String actual_title = (String) sight[finalL].getText();
                                     DatabaseReference commentsRef = FirebaseDatabase.getInstance().getReference("Users").child(userID);
                                     commentsRef.child("wishlist").addListenerForSingleValueEvent(new ValueEventListener() {
 
@@ -237,7 +239,7 @@ public class Profile extends AppCompatActivity {
                                             for (DataSnapshot snap: dataSnapshot.getChildren()) {
                                                 String id = snap.getKey();
 
-                                                if (id.equals(osem)) {
+                                                if (id.equals(actual_title)) {
                                                     DatabaseReference removeRef = dataSnapshot.getRef();
                                                     removeRef.child(id).removeValue();
                                                 }
@@ -252,9 +254,6 @@ public class Profile extends AppCompatActivity {
 
                                         }
                                     });
-
-                                    //FirebaseDatabase.getInstance().getReference("Users").child(userID).child("wishlist");
-
                                 }
                             });
                             builder.setNeutralButton("Cancel", new DialogInterface.OnClickListener() {

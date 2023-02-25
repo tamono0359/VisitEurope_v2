@@ -26,6 +26,7 @@ import android.os.Binder;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -87,12 +88,13 @@ public class PlacesListActivity extends AppCompatActivity  {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_places_list);
 
-        final TextView[] sight = new TextView[10];
+        final TextView[] sight = new TextView[100];
 
         Intent i = getIntent();
 
         String path = i.getStringExtra("path");
 
+        //Upload sights titles from database
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
         reference.child(path).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
             @SuppressLint("ResourceAsColor")
@@ -136,7 +138,10 @@ public class PlacesListActivity extends AppCompatActivity  {
         SharedPreferences sharedPreferences = getSharedPreferences(FILE_NAME, MODE_PRIVATE);
         ischecked = sharedPreferences.getBoolean("ischecked", false);
 
+
+        //Add place dialog
         addIcon.setOnClickListener(new View.OnClickListener() {
+            @SuppressLint("ResourceAsColor")
             @Override
             public void onClick(View view) {
                 if (fus != null || wasLoggingIn || ischecked) {
@@ -162,27 +167,6 @@ public class PlacesListActivity extends AppCompatActivity  {
                     final EditText place_history = new EditText(PlacesListActivity.this);
                     place_history.setHint("History");
                     layout.addView(place_history);
-
-                    /*final ImageView clip = new ImageView(PlacesListActivity.this);
-                    clip.setImageResource(R.drawable.clip);
-                    //clip.setMinimumWidth(30);
-                    //clip.setMinimumHeight(30);
-                    layout.addView(clip);
-
-                    clip.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-
-                            if (ContextCompat.checkSelfPermission(getApplicationContext(),
-                                    Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED){
-                                ActivityCompat.requestPermissions(PlacesListActivity.this,
-                                        new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
-                                        REQUEST_CODE_STORAGE_PERMISSION);
-                            }else{
-                                //selectImage();
-                            }
-                        }
-                    });*/
 
                     builder.setView(layout);
 
@@ -222,75 +206,4 @@ public class PlacesListActivity extends AppCompatActivity  {
             }
         });
     }
-
-    /*private void selectImage() {
-
-        Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-        if (intent.resolveActivity(getPackageManager()) != null){
-            startActivityForResult(intent, REQUEST_CODE_SELECT_IMAGE);
-        }
-
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-
-        if (requestCode == REQUEST_CODE_STORAGE_PERMISSION && grantResults.length > 0){
-            if (grantResults[0] == PackageManager.PERMISSION_GRANTED){
-                selectImage();
-            }else {
-                Toast.makeText(this, "Permission denied!", Toast.LENGTH_SHORT).show();
-            }
-        }
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        File selectedImageFile;
-
-        if (requestCode == REQUEST_CODE_SELECT_IMAGE && requestCode == RESULT_OK){
-            if (data != null){
-                selectedImageUri = data.getData();
-                if (selectedImageUri != null){
-                    try {
-                        InputStream inputStream = getContentResolver().openInputStream(selectedImageUri);
-                        Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
-
-                        selectedImageFile = new File(getPathFromUri(selectedImageUri));
-
-
-                         Create a Cloud Storage reference from the app
-                        FirebaseStorage storage = FirebaseStorage.getInstance("gs://visiteurope-8fccf.appspot.com");
-                        StorageReference storageRef = storage.getReference();
-
-                        // Create a reference to "mountains.jpg"
-                        StorageReference mountainsRef = storageRef.child("skuska");
-
-                        storageRef.child("skuska").putFile(Uri.fromFile(selectedImageFile));
-
-                    }catch (Exception exception){
-                        Toast.makeText(this, exception.getMessage(), Toast.LENGTH_SHORT).show();
-                    }
-                }
-            }
-        }
-    }
-
-    private String getPathFromUri(Uri contentUri){
-
-        String filePath;
-        Cursor cursor = getContentResolver().query(contentUri, null, null, null, null);
-        if (cursor == null){
-            filePath = contentUri.getPath();
-        }else {
-            cursor.moveToFirst();
-            int index = cursor.getColumnIndex("_data");
-            filePath = cursor.getString(index);
-            cursor.close();
-        }
-        return filePath;
-    }*/
 }
