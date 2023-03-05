@@ -14,6 +14,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.speech.tts.TextToSpeech;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -23,6 +24,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.demo.checkinternet.NetworkChangeListener;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -33,6 +35,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
@@ -59,6 +62,7 @@ public class Sight extends AppCompatActivity {
     Button imageUpload, imageSelect;
     // Uri indicates, where the image will be picked from
     private Uri filePath;
+    private String path;
 
     // request code
     private final int PICK_IMAGE_REQUEST = 22;
@@ -87,7 +91,7 @@ public class Sight extends AppCompatActivity {
 
         Intent i = getIntent();
 
-        String path = i.getStringExtra("path");
+        path = i.getStringExtra("path");
 
         sight = findViewById(R.id.sight);
         FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
@@ -273,17 +277,24 @@ public class Sight extends AppCompatActivity {
             progressDialog.show();
 
             // Defining the child of storageReference
-            StorageReference ref = storageReference.child("images/"+ UUID.randomUUID().toString());
-            // adding listeners on upload
+            StorageReference ref = storageReference.child("image"+UUID.randomUUID().toString());
+
+                        // adding listeners on upload
             // or failure of image
             ref.putFile(filePath).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                 @Override
                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-
                     // Image uploaded successfully
                     // Dismiss dialog
                     progressDialog.dismiss();
                     Toast.makeText(Sight.this, "Image Uploaded!!", Toast.LENGTH_SHORT).show();
+
+                    ref.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                        @Override
+                        public void onSuccess(Uri uri) {
+                            mdatabaseReference.child("image").setValue(uri.toString());
+                        }
+                    });
                 }
             }).addOnFailureListener(new OnFailureListener() {
                 @Override
