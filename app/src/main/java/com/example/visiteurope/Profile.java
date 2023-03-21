@@ -73,7 +73,7 @@ public class Profile extends AppCompatActivity {
     StorageReference storageReference;
     private DatabaseReference mdatabaseReference;
 
-    //ImageView profile_photo = findViewById(R.id.profile_photo);
+    ImageView profile_photo;
 
     private  boolean is8char=false, hasUpper=false, hasnum=false;
 
@@ -100,6 +100,8 @@ public class Profile extends AppCompatActivity {
 
         logout = (ImageView) findViewById(R.id.logout);
         back = (ImageView) findViewById(R.id.back);
+        profile_photo = findViewById(R.id.profile_photo);
+        storageReference = FirebaseStorage.getInstance().getReference();
 
         logout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -112,14 +114,6 @@ public class Profile extends AppCompatActivity {
                 StoredDataUsingSHaredPref(false);
             }
         });
-
-        /*StorageReference profileRef = storageReference.child("users/"+user.getUid()+"/profile.jpg");
-        profileRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-            @Override
-            public void onSuccess(Uri uri) {
-                Picasso.get().load(uri).into(profile_photo);
-            }
-        });*/
 
         back.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -134,6 +128,14 @@ public class Profile extends AppCompatActivity {
 
         email = (TextView) findViewById(R.id.email_info);
         name = (TextView) findViewById(R.id.name_info);
+
+        StorageReference profileRef = storageReference.child("users/"+user.getUid()+"/profile.jpg");
+        profileRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+            @Override
+            public void onSuccess(Uri uri) {
+                Picasso.get().load(uri).into(profile_photo);
+            }
+        });
 
         reference.child(userID).addListenerForSingleValueEvent(new ValueEventListener() {
             @SuppressLint("ResourceAsColor")
@@ -155,14 +157,6 @@ public class Profile extends AppCompatActivity {
                 Toast.makeText(Profile.this, "Something went wrong.", Toast.LENGTH_LONG).show();
             }
         });
-
-        /*profile_photo.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent openGalleryIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                startActivityForResult(openGalleryIntent, 1000);
-            }
-        });*/
 
         Button change_password = findViewById(R.id.changepass);
         change_password.setOnClickListener(new View.OnClickListener() {
@@ -236,7 +230,7 @@ public class Profile extends AppCompatActivity {
             }
         });
 
-        final TextView[] sight = new TextView[10];
+        final TextView[] sight = new TextView[50];
 
         //show user's wishlist
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Users");
@@ -309,6 +303,14 @@ public class Profile extends AppCompatActivity {
                 }
             }
         });
+
+        profile_photo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent openGalleryIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                startActivityForResult(openGalleryIntent, 1000);
+            }
+        });
     }
 
     @Override
@@ -323,14 +325,14 @@ public class Profile extends AppCompatActivity {
         editor.apply();
     }
 
-    /*@Override
+    @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == 1000) {
             if (resultCode == Activity.RESULT_OK) {
                 Uri imageUri = data.getData();
-                //profilePicture.setImageURI(imageUri);
+                profile_photo.setImageURI(imageUri);
 
                 uploadImageToFirebase(imageUri);
 
@@ -339,11 +341,11 @@ public class Profile extends AppCompatActivity {
     }
 
     private void uploadImageToFirebase(Uri imageUri) {
-        StorageReference fileRef = storageReference.child("users/"+user.getUid()+"/profile.jpg");
+        StorageReference fileRef = storageReference.child("users/" + user.getUid() + "/profile.jpg");
         fileRef.putFile(imageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                //Toast.makeText(ProfileActivity.this, "Image uploaded", Toast.LENGTH_LONG).show();
+                Toast.makeText(Profile.this, "Image uploaded", Toast.LENGTH_LONG).show();
                 fileRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                     @Override
                     public void onSuccess(Uri uri) {
@@ -356,6 +358,7 @@ public class Profile extends AppCompatActivity {
             public void onFailure(@NonNull Exception e) {
                 Toast.makeText(Profile.this, "Failed", Toast.LENGTH_LONG).show();
             }
-        });*/
+        });
+    }
     
 }

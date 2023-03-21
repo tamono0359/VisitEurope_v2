@@ -34,6 +34,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.squareup.picasso.Picasso;
 
@@ -106,6 +107,7 @@ public class HomeActivity extends AppCompatActivity {
         ImageView user = (ImageView) findViewById(R.id.user);
         Button ok = (Button) findViewById(R.id.ok);
 
+        storageReference = FirebaseStorage.getInstance().getReference();
 
         ok.setOnClickListener(view -> {
             if (state.getText().equals("Choose state")){
@@ -127,15 +129,15 @@ public class HomeActivity extends AppCompatActivity {
 
         if (fus != null && wasLoggingIn || fus !=null && ischecked) {
             user_icon.setVisibility(View.INVISIBLE);
-            //StorageReference profileRef = storageReference.child("users/" + fus.getUid() + "/profile.jpg");
             user.setVisibility(View.VISIBLE);
 
-            /*profileRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+            StorageReference profileRef = storageReference.child("users/" + fus.getUid() + "/profile.jpg");
+            profileRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                 @Override
                 public void onSuccess(Uri uri) {
                     Picasso.get().load(uri).into(user);
                 }
-            });*/
+            });
 
             user.setOnClickListener(new View.OnClickListener() {
                 @Override
