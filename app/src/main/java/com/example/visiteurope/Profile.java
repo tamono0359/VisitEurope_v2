@@ -1,17 +1,23 @@
 package com.example.visiteurope;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.res.ColorStateList;
+import android.graphics.Bitmap;
 import android.net.ConnectivityManager;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.text.method.PasswordTransformationMethod;
 import android.view.Gravity;
 import android.view.MotionEvent;
@@ -36,9 +42,16 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.OnProgressListener;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
+import com.squareup.picasso.Picasso;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 public class Profile extends AppCompatActivity {
 
@@ -49,6 +62,18 @@ public class Profile extends AppCompatActivity {
     private DatabaseReference reference;
     private String userID;
     private static final String FILE_NAME = "myFile";
+    // Uri indicates, where the image will be picked from
+    private Uri filePath;
+
+    // request code
+    private final int PICK_IMAGE_REQUEST = 22;
+
+    // instance for firebase storage and StorageReference
+    FirebaseStorage storage;
+    StorageReference storageReference;
+    private DatabaseReference mdatabaseReference;
+
+    //ImageView profile_photo = findViewById(R.id.profile_photo);
 
     private  boolean is8char=false, hasUpper=false, hasnum=false;
 
@@ -88,6 +113,14 @@ public class Profile extends AppCompatActivity {
             }
         });
 
+        /*StorageReference profileRef = storageReference.child("users/"+user.getUid()+"/profile.jpg");
+        profileRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+            @Override
+            public void onSuccess(Uri uri) {
+                Picasso.get().load(uri).into(profile_photo);
+            }
+        });*/
+
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -108,7 +141,7 @@ public class Profile extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 User user_profile = snapshot.getValue(User.class);
 
-                if (user_profile != null){
+                if (user_profile != null) {
                     String fullname = user_profile.fullName;
                     String mail = user_profile.email;
 
@@ -122,6 +155,14 @@ public class Profile extends AppCompatActivity {
                 Toast.makeText(Profile.this, "Something went wrong.", Toast.LENGTH_LONG).show();
             }
         });
+
+        /*profile_photo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent openGalleryIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                startActivityForResult(openGalleryIntent, 1000);
+            }
+        });*/
 
         Button change_password = findViewById(R.id.changepass);
         change_password.setOnClickListener(new View.OnClickListener() {
@@ -137,34 +178,34 @@ public class Profile extends AppCompatActivity {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         String newpass = changepass.getText().toString();
-                        if (newpass.isEmpty()){
+                        if (newpass.isEmpty()) {
                             changepass.setError("Password is required!");
                             changepass.requestFocus();
                             return;
                         }
 
                         // 8 character
-                        if(newpass.length()>= 8) {
+                        if (newpass.length() >= 8) {
                             is8char = true;
-                        }else{
+                        } else {
                             is8char = false;
                             changepass.setError("Min password length should be 6 characters!");
                             changepass.requestFocus();
                             return;
                         }
                         //number
-                        if(newpass.matches("(.*[0-9].*)")) {
+                        if (newpass.matches("(.*[0-9].*)")) {
                             hasnum = true;
-                        }else{
+                        } else {
                             hasnum = false;
                             changepass.setError("Password must contain at least one number!");
                             changepass.requestFocus();
                             return;
                         }
                         //upper case
-                        if(newpass.matches("(.*[A-Z].*)")) {
+                        if (newpass.matches("(.*[A-Z].*)")) {
                             hasUpper = true;
-                        }else{
+                        } else {
                             hasUpper = false;
                             changepass.setError("Password must contain at least one capital letter!");
                             changepass.requestFocus();
@@ -195,7 +236,7 @@ public class Profile extends AppCompatActivity {
             }
         });
 
-        final TextView[] sight = new TextView[100];
+        final TextView[] sight = new TextView[10];
 
         //show user's wishlist
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Users");
@@ -206,13 +247,13 @@ public class Profile extends AppCompatActivity {
                 DataSnapshot ds = task.getResult();
                 LinearLayout ll_profile = (LinearLayout) findViewById(R.id.ll_profile);
                 int l = -1;
-                for(DataSnapshot datas : ds.getChildren()) {
+                for (DataSnapshot datas : ds.getChildren()) {
                     l++;
                     sight[l] = new TextView(getApplicationContext());
                     sight[l].setText(datas.getKey());
                     ll_profile.addView(sight[l]);
                     LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-                    params.setMargins(0,10,0,15);
+                    params.setMargins(0, 10, 0, 15);
                     sight[l].setGravity(Gravity.CENTER);
                     sight[l].setTextSize(17);
                     sight[l].setTextColor(getResources().getColor(R.color.white));
@@ -222,7 +263,7 @@ public class Profile extends AppCompatActivity {
                         @Override
                         public void onClick(View v) {
                             AlertDialog.Builder builder = new AlertDialog.Builder(Profile.this);
-                            builder.setTitle("Edit "+sight[finalL].getText());
+                            builder.setTitle("Edit " + sight[finalL].getText());
 
                             //deleting place from wishlist
                             builder.setNegativeButton("Delete", new DialogInterface.OnClickListener() {
@@ -236,7 +277,7 @@ public class Profile extends AppCompatActivity {
                                         @Override
                                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
-                                            for (DataSnapshot snap: dataSnapshot.getChildren()) {
+                                            for (DataSnapshot snap : dataSnapshot.getChildren()) {
                                                 String id = snap.getKey();
 
                                                 if (id.equals(actual_title)) {
@@ -281,4 +322,40 @@ public class Profile extends AppCompatActivity {
         editor.putBoolean("ischecked", ischecked);
         editor.apply();
     }
+
+    /*@Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == 1000) {
+            if (resultCode == Activity.RESULT_OK) {
+                Uri imageUri = data.getData();
+                //profilePicture.setImageURI(imageUri);
+
+                uploadImageToFirebase(imageUri);
+
+            }
+        }
+    }
+
+    private void uploadImageToFirebase(Uri imageUri) {
+        StorageReference fileRef = storageReference.child("users/"+user.getUid()+"/profile.jpg");
+        fileRef.putFile(imageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                //Toast.makeText(ProfileActivity.this, "Image uploaded", Toast.LENGTH_LONG).show();
+                fileRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                    @Override
+                    public void onSuccess(Uri uri) {
+                        Picasso.get().load(uri).into(profile_photo);
+                    }
+                });
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Toast.makeText(Profile.this, "Failed", Toast.LENGTH_LONG).show();
+            }
+        });*/
+    
 }

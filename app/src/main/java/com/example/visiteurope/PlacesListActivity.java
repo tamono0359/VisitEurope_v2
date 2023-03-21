@@ -10,6 +10,7 @@ import androidx.core.content.ContextCompat;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -20,6 +21,8 @@ import android.content.res.ColorStateList;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.os.Binder;
@@ -28,6 +31,7 @@ import android.provider.MediaStore;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -64,6 +68,10 @@ public class PlacesListActivity extends AppCompatActivity  {
     private boolean ischecked;
     NetworkChangeListener networkChangeListener = new NetworkChangeListener();
 
+    private Dialog dialog;
+
+    private String path;
+
     @Override
     protected void onStart() {
         IntentFilter filter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
@@ -92,7 +100,7 @@ public class PlacesListActivity extends AppCompatActivity  {
 
         Intent i = getIntent();
 
-        String path = i.getStringExtra("path");
+        path = i.getStringExtra("path");
 
         //Upload sights titles from database
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
@@ -145,7 +153,7 @@ public class PlacesListActivity extends AppCompatActivity  {
             @Override
             public void onClick(View view) {
                 if (fus != null || wasLoggingIn || ischecked) {
-                    AlertDialog.Builder builder = new AlertDialog.Builder(PlacesListActivity.this);
+                    /*AlertDialog.Builder builder = new AlertDialog.Builder(PlacesListActivity.this);
                     builder.setTitle("Add place:");
 
                     LinearLayout layout = new LinearLayout(PlacesListActivity.this);
@@ -199,11 +207,66 @@ public class PlacesListActivity extends AppCompatActivity  {
                             // what ever you want to do with No option.
                         }
                     });
-                    builder.show();
+                    builder.show();*/
+
+                    alertDialog();
+
                 } else {
                     Toast.makeText(PlacesListActivity.this, "You need to be logged in if you want to add place.", Toast.LENGTH_LONG).show();
                 }
             }
         });
+    }
+
+    public void alertDialog() {
+        dialog = new Dialog(this);
+        dialog.setContentView(R.layout.add_place_dialog);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        dialog.setCancelable(false);
+        dialog.getWindow().getAttributes().windowAnimations = R.style.DialogAnimation;
+
+        EditText place_title = dialog.findViewById(R.id.place_title);
+        EditText place_location = dialog.findViewById(R.id.place_location);
+        EditText place_information = dialog.findViewById(R.id.place_information);
+        EditText place_history = dialog.findViewById(R.id.place_history);
+        Button save_button = dialog.findViewById(R.id.save_button);
+        Button cancel_button = dialog.findViewById(R.id.cancel_button);
+
+        dialog.show();
+
+       save_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String title, information, location, history;
+                title = place_title.getText().toString();
+                location = place_location.getText().toString();
+                information = place_information.getText().toString();
+                history = place_history.getText().toString();
+
+                if (title.isEmpty() || location.isEmpty() || information.isEmpty() || history.isEmpty()){
+                    Toast.makeText(PlacesListActivity.this, "You need to fill informations.", Toast.LENGTH_LONG).show();
+                    dialog.dismiss();
+                } else {
+
+                    DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
+                    reference.child(path).child(title).child("location").setValue(location);
+
+                    reference.child(path).child(title).child("info").setValue(information);
+
+                    reference.child(path).child(title).child("history").setValue(history);
+
+                    Toast.makeText(PlacesListActivity.this, "Saved sucessfully.", Toast.LENGTH_LONG).show();
+                }
+            }
+        });
+
+        cancel_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+
     }
 }

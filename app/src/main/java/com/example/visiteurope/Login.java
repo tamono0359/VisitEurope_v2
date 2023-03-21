@@ -164,10 +164,10 @@ public class Login extends AppCompatActivity implements View.OnClickListener{
                             FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
                             if (user != null) {
-                                if (user.isEmailVerified()){
+                                if (user.isEmailVerified()) {
                                     startActivity(new Intent(Login.this, Profile.class));
                                     progressBar.setVisibility(View.INVISIBLE);
-                                }else{
+                                } else {
                                     user.sendEmailVerification();
                                     Toast.makeText(Login.this, "Check your email to verify your account.", Toast.LENGTH_SHORT).show();
                                     progressBar.setVisibility(View.INVISIBLE);
@@ -175,7 +175,7 @@ public class Login extends AppCompatActivity implements View.OnClickListener{
                                 if (checkBox.isChecked()) {
                                         StoredDataUsingSHaredPref(true);
                                     }  else {
-                                    StoredDataUsingSHaredPref(false);
+                                        StoredDataUsingSHaredPref(false);
                                 }
 
                                     wasLoggingIn = true;

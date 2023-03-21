@@ -52,7 +52,7 @@
                 android:orientation="horizontal">
 
                 <Button
-                    android:id="@+id/uploadImage"
+                    android:id="@+id/cancel_button"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
@@ -68,7 +68,7 @@
                     tools:visibility="invisible" />
 
                 <Button
-                    android:id="@+id/selectImage"
+                    android:id="@+id/save_button"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
@@ -103,11 +103,6 @@
                     android:clickable="true"
                     app:srcCompat="@drawable/microphone" />
 
-                <!--<TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"></TextView>
-
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -131,7 +126,12 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"></TextView>-->
+                    android:layout_weight="1"></TextView>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"></TextView>
 
 
                 <CheckBox

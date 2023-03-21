@@ -8,12 +8,15 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.core.content.ContextCompat;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
+import android.net.Uri;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CompoundButton;
@@ -23,6 +26,7 @@ import android.widget.Toast;
 
 import com.demo.checkinternet.NetworkChangeListener;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.switchmaterial.SwitchMaterial;
 import com.google.firebase.auth.FirebaseAuth;
@@ -30,6 +34,8 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.StorageReference;
+import com.squareup.picasso.Picasso;
 
 import java.util.Objects;
 
@@ -42,6 +48,8 @@ public class HomeActivity extends AppCompatActivity {
     Button state, city;
     String[] listItemsCity;
     Intent intent;
+
+    StorageReference storageReference;
 
     private static final String FILE_NAME = "myFile";
     private FirebaseUser fus;
@@ -117,9 +125,18 @@ public class HomeActivity extends AppCompatActivity {
         SharedPreferences sharedPreferences = getSharedPreferences(FILE_NAME, MODE_PRIVATE);
         ischecked = sharedPreferences.getBoolean("ischecked", false);
 
-        if ((fus != null && wasLoggingIn) || ischecked) {
+        if (fus != null && wasLoggingIn || fus !=null && ischecked) {
             user_icon.setVisibility(View.INVISIBLE);
+            //StorageReference profileRef = storageReference.child("users/" + fus.getUid() + "/profile.jpg");
             user.setVisibility(View.VISIBLE);
+
+            /*profileRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                @Override
+                public void onSuccess(Uri uri) {
+                    Picasso.get().load(uri).into(user);
+                }
+            });*/
+
             user.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
