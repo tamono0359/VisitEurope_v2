@@ -68,7 +68,9 @@
                     android:layout_width="120dp"
                     android:layout_height="120dp"
                     android:layout_marginBottom="30dp"
+                    android:background="@drawable/shape_general"
                     android:clickable="true"
+                    android:padding="10dp"
                     app:srcCompat="@drawable/user" />
 
                 <TextView

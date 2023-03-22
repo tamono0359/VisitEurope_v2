@@ -13,6 +13,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.os.Bundle;
@@ -136,6 +137,8 @@ public class HomeActivity extends AppCompatActivity {
                 @Override
                 public void onSuccess(Uri uri) {
                     Picasso.get().load(uri).into(user);
+                    user.setBackgroundResource(R.drawable.shape_general);
+                    user.setPadding(10, 10, 10,10);
                 }
             });
 
